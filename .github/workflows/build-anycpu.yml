@@ -26,13 +26,16 @@ jobs:
         run: |
           $version = "${{ inputs.hdt_version }}"
           if ([string]::IsNullOrWhiteSpace($version)) { $version = "1.58.3" }
-          $url = "https://github.com/HearthSim/Hearthstone-Deck-Tracker/releases/download/v$version/Hearthstone.Deck.Tracker-v$version.zip"
+          $url = "https://github.com/HearthSim/HDT-Releases/releases/download/v$version/HearthstoneDeckTracker-$version-full.nupkg"
           Invoke-WebRequest -Uri $url -OutFile hdt.zip
           Expand-Archive hdt.zip -DestinationPath hdt
+          $hdtExe = Get-ChildItem hdt -Recurse -Filter "HearthstoneDeckTracker.exe" | Select-Object -First 1
+          if (-not $hdtExe) { throw "HearthstoneDeckTracker.exe not found in release package" }
+          "HDT_INSTALL_DIR=$($hdtExe.Directory.FullName)" | Out-File -FilePath $env:GITHUB_ENV -Append
 
       - name: Build
         shell: powershell
-        run: .\build.ps1 -Configuration Release -HDTInstallDir "${{ github.workspace }}\hdt"
+        run: .\build.ps1 -Configuration Release -HDTInstallDir "$env:HDT_INSTALL_DIR"
 
       - name: Upload DLL
         uses: actions/upload-artifact@v4
