@@ -133,6 +133,14 @@ Changes export compares the current collection against the saved baseline:
 
 If no baseline exists yet, the plugin creates one from the current collection instead of failing. The next changes export will then contain only newer changes.
 
+## AnyCPU / CrossOver compatibility
+
+This fork changes the HDT plugin build from x86-only to **AnyCPU**. The original project explicitly targeted x86 in the project, solution, and build script, which can cause HDT to reject the plugin with `BadImageFormatException` when HDT is running as a 64-bit process (including HDT under CrossOver/Wine).
+
+The build configuration now uses `AnyCPU` with `Prefer32Bit=false`. The GitHub Actions build uses a Windows runner, downloads the HDT 1.58.3 full package from [HearthSim/HDT-Releases](https://github.com/HearthSim/HDT-Releases), builds the plugin against that HDT installation, and uploads `HdtCollectionExporter.dll` as a workflow artifact.
+
+This AnyCPU build has been tested successfully with HDT 1.58.3 running under CrossOver on macOS.
+
 ## Build
 
 Requirements:
@@ -151,7 +159,7 @@ Build from the repository root:
 Build output:
 
 ```text
-src\HdtCollectionExporter\bin\x86\Release\HdtCollectionExporter.dll
+src\HdtCollectionExporter\bin\AnyCPU\Release\HdtCollectionExporter.dll
 ```
 
 ## Project Structure
