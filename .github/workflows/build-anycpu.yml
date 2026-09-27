@@ -25,6 +25,7 @@ jobs:
         shell: powershell
         run: |
           $version = "${{ inputs.hdt_version }}"
+          if ([string]::IsNullOrWhiteSpace($version)) { $version = "1.58.3" }
           $url = "https://github.com/HearthSim/Hearthstone-Deck-Tracker/releases/download/v$version/Hearthstone.Deck.Tracker-v$version.zip"
           Invoke-WebRequest -Uri $url -OutFile hdt.zip
           Expand-Archive hdt.zip -DestinationPath hdt
