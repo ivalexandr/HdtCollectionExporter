@@ -17,6 +17,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Add MSBuild to PATH
+        uses: microsoft/setup-msbuild@v2
+
       - name: Install .NET Framework 4.7.2 Developer Pack
         shell: powershell
         run: choco install netfx-4.7.2-devpack -y --no-progress
