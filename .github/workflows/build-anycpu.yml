@@ -11,6 +11,9 @@ on:
       - main
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: windows-latest
@@ -51,4 +54,3 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: src/HdtCollectionExporter/bin/AnyCPU/Release/HdtCollectionExporter.dll
-          generate_release_notes: true
