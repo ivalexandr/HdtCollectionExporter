@@ -20,10 +20,62 @@
             <Setter Property="Foreground" Value="#F2F4F8" />
         </Style>
 
+        <!--
+            Use a self-contained CheckBox template instead of the Windows theme renderer.
+            Wine/CrossOver can render the native WPF CheckBox glyph but fail to update its
+            checked visual. Keeping the state in WPF and drawing the mark ourselves makes
+            the control deterministic on both Windows and CrossOver.
+        -->
         <Style TargetType="{x:Type CheckBox}">
             <Setter Property="Foreground" Value="#F2F4F8" />
             <Setter Property="Margin" Value="0,4,18,4" />
             <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type CheckBox}">
+                        <Border x:Name="HitArea"
+                                Background="Transparent"
+                                Padding="0,2">
+                            <StackPanel Orientation="Horizontal">
+                                <Grid Width="18"
+                                      Height="18"
+                                      Margin="0,0,7,0"
+                                      VerticalAlignment="Center">
+                                    <Border x:Name="CheckBorder"
+                                            Background="#15171B"
+                                            BorderBrush="#8B929D"
+                                            BorderThickness="1"
+                                            CornerRadius="2" />
+                                    <Path x:Name="CheckMark"
+                                          Margin="3"
+                                          Data="M 1,5 L 4,8 L 10,1"
+                                          Stroke="#FFFFFF"
+                                          StrokeThickness="2"
+                                          StrokeStartLineCap="Round"
+                                          StrokeEndLineCap="Round"
+                                          Visibility="Collapsed" />
+                                </Grid>
+                                <ContentPresenter VerticalAlignment="Center"
+                                                  RecognizesAccessKey="True" />
+                            </StackPanel>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="CheckBorder" Property="Background" Value="#6F2DBD" />
+                                <Setter TargetName="CheckBorder" Property="BorderBrush" Value="#B693E5" />
+                                <Setter TargetName="CheckMark" Property="Visibility" Value="Visible" />
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="CheckBorder" Property="BorderBrush" Value="#D0B8F0" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="HitArea" Property="Opacity" Value="0.55" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
 
         <Style TargetType="{x:Type TextBox}">
